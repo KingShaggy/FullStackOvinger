@@ -23,5 +23,3 @@ for (i = 0; i < list.length; i++) {
     listItem.innerHTML = list[i];
     document.getElementById("list").appendChild(listItem);
 }
-
-console.log(document.getElementById("list"))
