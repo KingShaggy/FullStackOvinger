@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Martys construction</title>
     <link rel="stylesheet" href="style.css">
+    <script defer src="index.js"></script>
 </head>
 <body>
     <div class="grid">
@@ -35,6 +36,24 @@
             <footer>
                 <p id="copyright">© Martys Construction A/S 2022</p>
             </footer>
+        </div>
+
+        <!---Just some random buttons for the js stuff-->
+
+        <div>
+            <button id="but1" class="myButtons" onclick="addOne()">Click to add one to the number to the right</button>
+            <input type="text" id="add" value="0"></input>
+        </div>
+
+        <div>
+            <button id="but2" class="myButtons" onclick="displayOrHide()">Click to display/hide the text below</button>
+            <p style ="visibility: hidden;"id="hide">NOT HIDDEN</input>
+        </div>
+
+        <div>
+            <ul id="list">
+
+            </ul>
         </div>
     </div>
 </body>
