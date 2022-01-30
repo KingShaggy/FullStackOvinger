@@ -1,84 +1,135 @@
 <template>
     <div class="calculator">
         <div id="display">
-            <input type="text" class="input-numbers" value="0">
+            <input type="text" class="input-numbers" v-model="current" placeholder="0">
         </div>
         <div class="grid-container">
-            <div class="action-btn">C</div>
-            <div class="action-btn">DEL</div>
-            <div class="action-btn">%</div>
-            <div class="operation-btn">÷</div>
-            <div class="num-btn">7</div>
-            <div class="num-btn">8</div>
-            <div class="num-btn">9</div>
-            <div class="operation-btn">x</div>
-            <div class="num-btn">4</div>
-            <div class="num-btn">5</div>
-            <div class="num-btn">6</div>
-            <div class="operation-btn">-</div>
-            <div class="num-btn">1</div>
-            <div class="num-btn">2</div>
-            <div class="num-btn">3</div>
-            <div class="operation-btn">+</div>
-            <div id="zero" class="num-btn">0</div>
-            <div class="num-btn">.</div>
-            <div class="operation-btn">=</div>
+            <div @click="clear" class="action-btn">C</div>
+            <div @click="del" class="action-btn">DEL</div>
+            <div @click="percent" class="action-btn">%</div>
+            <div @click="divide" class="operation-btn">÷</div>
+            <div @click="append('7')" class="num-btn">7</div>
+            <div @click="append('8')" class="num-btn">8</div>
+            <div @click="append('9')" class="num-btn">9</div>
+            <div @click="multiply" class="operation-btn">x</div>
+            <div @click="append('4')" class="num-btn">4</div>
+            <div @click="append('5')" class="num-btn">5</div>
+            <div @click="append('6')" class="num-btn">6</div>
+            <div @click="subtract" class="operation-btn">-</div>
+            <div @click="append('1')" class="num-btn">1</div>
+            <div @click="append('2')" class="num-btn">2</div>
+            <div @click="append('3')" class="num-btn">3</div>
+            <div @click="add" class="operation-btn">+</div>
+            <div @click="append('0')" id="zero" class="num-btn">0</div>
+            <div @click="append('.')" class="num-btn">.</div>
+            <div @click="equals" class="operation-btn">=</div>
         </div>
     </div>
 </template>
 
+<script>
+export default {
+    data() {
+        return {
+            current: '',
+            previous: '',
+            operator: '',
+        }
+    },
+    methods: {
+        clear() {
+            this.current = '';
+        },
+        del() {
+            this.current = this.current.slice(0, -1);
+        },
+        percent() {
+            this.current = parseFloat(this.current/100);
+        },
+        append(number) {
+            if (this.current !== '.') {
+                this.current = this.current.concat(number)
+            }
+        },
+        divide() {
+            this.operator = '/';
+            this.previous = this.current;
+            this.clear();
+        },
+        multiply() {
+            this.operator = '*';
+            this.previous = this.current;
+            this.clear();
+        },
+        subtract() {
+            this.operator = '-';
+            this.previous = this.current;
+            this.clear();
+        },
+        add() {
+            this.operator = '+';
+            this.previous = this.current;
+            this.clear();
+        },
+        equals() {
+            this.current = eval(this.current + this.operator + this.previous);
+        }
+    }
+}
+</script>
+
 <style>
-    .calculator{
-        max-width:320px;
-        background: black;
-    }
+.calculator{
+    max-width:320px;
+    background: black;
+}
 
-    .grid-container {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        border: 0;
-    }
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 0;
+}
 
-    .input-numbers {
-        background: black;
-        color: white;
-        font-size: 3em;
-        border: 0;
-        padding: 0;
-        max-width: 320px;
-        text-align: right;
-        height: 100px;
-    }
+.input-numbers {
+    background: black;
+    color: white;
+    font-size: 3em;
+    border: 0;
+    padding: 0;
+    max-width: 320px;
+    text-align: right;
+    height: 100px;
+}
 
-    .num-btn {
-        background-color: #505050;
-        color: white;
-        font-weight: bold;
-        height: 65px;
-        border:1px solid black;
-    }
+.num-btn {
+    background-color: #505050;
+    color: white;
+    font-weight: bold;
+    height: 65px;
+    border:1px solid black;
+}
 
-    .operation-btn {
-        background: #FF9500;
-        color: white;
-        font-weight: bold;
-        height: 65px;
-        border:1px solid black;
-    }
+.operation-btn {
+    background: #FF9500;
+    color: white;
+    font-weight: bold;
+    height: 65px;
+    border:1px solid black;
+}
 
-    .action-btn {
-        background-color: #D4D4D2;
-        color: black;
-        font-weight: bold;
-        height: 65px;
-        border:1px solid black;
-    }
+.action-btn {
+    background-color: #D4D4D2;
+    color: black;
+    font-weight: bold;
+    height: 65px;
+    border:1px solid black;
+}
 
-    #zero {
-        grid-column: span 2;
-    }
+#zero {
+    grid-column: span 2;
+}
 
-    #display {
-        margin: auto;
-    }
+#display {
+    margin: auto;
+}
 </style>
