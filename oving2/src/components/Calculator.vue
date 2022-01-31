@@ -25,16 +25,23 @@
             <div @click="equals" class="operation-btn">=</div>
         </div>
     </div>
+    <History v-bind:history="history"/>
 </template>
 
 <script>
+import History from "./History.vue";
 export default {
     data() {
         return {
             current: '',
             previous: '',
             operator: '',
+            result: '',
+            history: [],
         }
+    },
+    components: {
+        History,
     },
     methods: {
         clear() {
@@ -72,7 +79,9 @@ export default {
             this.clear();
         },
         equals() {
-            this.current = eval(this.current + this.operator + this.previous);
+            this.result = eval(this.current + this.operator + this.previous);
+            this.history.push(this.current + " " + this.operator + " " + this.previous + " = " + this.result);
+            this.current = this.result;
         }
     }
 }
