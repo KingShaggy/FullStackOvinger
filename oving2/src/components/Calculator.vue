@@ -1,7 +1,7 @@
 <template>
     <div class="calculator">
         <div id="display">
-            <input type="text" class="input-numbers" v-model="current" placeholder="0">
+            <input type="number" class="input-numbers" v-model="current" placeholder="0">
         </div>
         <div class="grid-container">
             <div @click="clear" class="action-btn">C</div>
@@ -21,7 +21,7 @@
             <div @click="append('3')" class="num-btn">3</div>
             <div @click="add" class="operation-btn">+</div>
             <div @click="append('0')" id="zero" class="num-btn">0</div>
-            <div @click="append('.')" class="num-btn">.</div>
+            <div @click="dot()" class="num-btn">.</div>
             <div @click="equals" class="operation-btn">=</div>
         </div>
     </div>
@@ -54,8 +54,11 @@ export default {
             this.current = parseFloat(this.current/100);
         },
         append(number) {
-            if (this.current !== '.') {
-                this.current = this.current.concat(number)
+            this.current = this.current.concat(number);
+        },
+        dot() {
+            if (!this.current.includes('.')) {
+                this.append('.');
             }
         },
         divide() {
@@ -79,8 +82,8 @@ export default {
             this.clear();
         },
         equals() {
-            this.result = eval(this.current + this.operator + this.previous);
-            this.history.push(this.current + " " + this.operator + " " + this.previous + " = " + this.result);
+            this.result = eval(this.previous + this.operator + this.current);
+            this.history.push(this.previous + " " + this.operator + " " + this.current + " = " + this.result);
             this.current = this.result;
         }
     }
