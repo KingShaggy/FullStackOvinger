@@ -9,10 +9,9 @@
 
 <script>
 export default {
-    props: ['history'],
-    data() {
-        return {
-
+    computed: {
+        history() {
+            return this.$store.state.history
         }
     }
 }
