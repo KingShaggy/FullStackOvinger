@@ -35,7 +35,7 @@ export default {
             previous: '',
             operator: '',
             result: '',
-            history: [],
+            newHistory: '',
         }
     },
     methods: {
@@ -78,9 +78,12 @@ export default {
         },
         equals() {
             this.result = eval(this.previous + this.operator + this.current);
-            this.history.push(this.previous + " " + this.operator + " " + this.current + " = " + this.result);
-            this.$store.state.history = this.history;
+            this.newHistory = this.previous + " " + this.operator + " " + this.current + " = " + this.result;
+            this.updateHistory(this.newHistory);
             this.current = this.result;
+        },
+        updateHistory(newHistory) {
+            this.$store.commit('updateHistory', newHistory);
         }
     }
 }
