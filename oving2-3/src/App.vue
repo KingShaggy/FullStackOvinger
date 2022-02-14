@@ -1,5 +1,5 @@
 <template>
-    <div if="nav">
+    <div id="nav">
         <router-link to="/">Home</router-link>
         <router-link to="/contact">Contact</router-link>
     </div>
@@ -20,5 +20,14 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+#nav {
+  font-size: 1.2em;
+  text-transform: uppercase;
+}
+
+#nav a {
+  padding: 4px;
 }
 </style>
