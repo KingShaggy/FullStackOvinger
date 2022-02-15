@@ -1,26 +1,34 @@
 <template>
   <h1>Feedback</h1>
-  <form @submit.prevent="sendFeedback">
+  <Form @submit="sendFeedback">
     <label>Name:</label>
-    <input type="text" v-model="name" required>
+    <Field type="text" v-model="name" />
 
     <label>Email:</label>
-    <input type="email" v-model="email" required>
+    <Field type="email" name="email" v-model="email" :rules="validateEmail" />
+    <ErrorMessage name="email" />
 
     <label>Message:</label>
-    <input type="text" id="message" required>
+    <Field type="text" id="message" />
 
     <div class="submit">
       <button>Send Feedback</button>
     </div>
 
     <div class="response" id="response"></div>
-  </form>
+  </Form>
 </template>
 
 <script>
+import { Form, Field, ErrorMessage } from "vee-validate";
+
 export default {
   name: "Contact",
+   components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
   computed: {
     name: {
       get() {
@@ -41,7 +49,7 @@ export default {
   },
   methods: {
     sendFeedback() {
-      document.getElementById("message").value = ""
+      document.getElementById("message").value = "";
       document.getElementById("response").innerHTML="Sending...";
       setTimeout(function(){
       document.getElementById("response").innerHTML="Sent";
@@ -49,13 +57,26 @@ export default {
       setTimeout(function(){
       document.getElementById("response").innerHTML="";
       },3500);
+    },
+    validateEmail(value) {
+      // if the field is empty
+      if (!value) {
+        return 'This field is required';
+      }
+      // if the field is not a valid email
+      const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+      if (!regex.test(value)) {
+        return 'This field must be a valid email';
+      }
+      // All is good
+      return true;
     }
   }
 };
 </script>
 
 <style>
-  form {
+  Form {
     max-width: 420px;
     margin: 30px auto;
     background: white;
@@ -72,7 +93,7 @@ export default {
     letter-spacing: 1px;
     font-weight: bold;
   }
-  input {
+  Field {
     display: block;
     padding: 10px 6px;
     width: 100%;
