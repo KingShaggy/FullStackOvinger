@@ -1,55 +1,93 @@
 <template>
   <h1>Feedback</h1>
-  <Form @submit="sendFeedback">
-    <label>Name:</label>
-    <Field type="text" v-model="name" />
+  <form @submit.prevent="sendFeedback">
+    <div class="input">
+      <label>Name:</label>
+      <BaseInput type="text" v-model="name" :error="nameError" />
 
-    <label>Email:</label>
-    <Field type="email" name="email" v-model="email" :rules="validateEmail" />
-    <ErrorMessage name="email" />
+      <label>Email:</label>
+      <BaseInput type="text" v-model="email" :error="emailError" />
 
-    <label>Message:</label>
-    <Field type="text" id="message" />
+      <label>Message:</label>
+      <BaseInput type="text" id="message" />
 
-    <div class="submit">
-      <button>Send Feedback</button>
+      <div class="submit">
+        <button type="submit">Send Feedback</button>
+      </div>
+
+      <div class="response" id="response"></div>
     </div>
-
-    <div class="response" id="response"></div>
-  </Form>
+  </form>
 </template>
 
 <script>
-import { Form, Field, ErrorMessage } from "vee-validate";
+import BaseInput from "../components/BaseInput";
+import { useField, useForm } from 'vee-validate';
 
 export default {
   name: "Contact",
-   components: {
-    Form,
-    Field,
-    ErrorMessage,
-  },
-  computed: {
-    name: {
-      get() {
-        return this.$store.state.name
+  setup() {
+    function onSubmit() {
+    }
+
+    const validations = {
+      email: value => {
+        if (!value) return 'This field is required'
+
+        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if (!regex.test(String(value).toLowerCase())) {
+          return 'Please enter a valid email address'
+        }
+
+        return true
       },
-      set(newName) {
-        this.$store.commit('updateName', newName);
-      }
-    },
-    email: {
-      get() {
-        return this.$store.state.email
-      },
-      set(newEmail) {
-        this.$store.commit('updateEmail', newEmail);
+      name: value => {
+        const requiredMessage = 'This field is required'
+        if (value === undefined || value === null) return requiredMessage
+        if (!String(value).length) return requiredMessage
+
+        return true
       }
     }
+
+    useForm({
+      validationSchema: validations
+    })
+
+    const { value: email, errorMessage: emailError } = useField('email')
+    const { value: name, errorMessage: nameError } = useField('name')
+
+    return {
+      onSubmit,
+      email,
+      emailError,
+      name,
+      nameError
+    }
   },
+  components: {
+    BaseInput,
+  },
+  // computed: {
+  //   name: {
+  //     get() {
+  //       return this.$store.state.name
+  //     },
+  //     set(newName) {
+  //       this.$store.commit('updateName', newName);
+  //     }
+  //   },
+  //   email: {
+  //     get() {
+  //       return this.$store.state.email
+  //     },
+  //     set(newEmail) {
+  //       this.$store.commit('updateEmail', newEmail);
+  //     }
+  //   }
+  // },
   methods: {
     sendFeedback() {
-      document.getElementById("message").value = "";
       document.getElementById("response").innerHTML="Sending...";
       setTimeout(function(){
       document.getElementById("response").innerHTML="Sent";
@@ -57,26 +95,13 @@ export default {
       setTimeout(function(){
       document.getElementById("response").innerHTML="";
       },3500);
-    },
-    validateEmail(value) {
-      // if the field is empty
-      if (!value) {
-        return 'This field is required';
-      }
-      // if the field is not a valid email
-      const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-      if (!regex.test(value)) {
-        return 'This field must be a valid email';
-      }
-      // All is good
-      return true;
     }
   }
 };
 </script>
 
 <style>
-  Form {
+  form {
     max-width: 420px;
     margin: 30px auto;
     background: white;
@@ -93,8 +118,9 @@ export default {
     letter-spacing: 1px;
     font-weight: bold;
   }
-  Field {
-    display: block;
+  .input {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
     padding: 10px 6px;
     width: 100%;
     box-sizing: border-box;
