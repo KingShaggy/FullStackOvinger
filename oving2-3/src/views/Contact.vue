@@ -1,18 +1,24 @@
 <template>
   <h1>Feedback</h1>
+  <div class="errors" v-if="errors.length">
+    <b>Please correct the following errors:</b>
+    <ul>
+      <li v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
+    </ul>
+  </div>
   <form @submit.prevent="sendFeedback">
     <div class="input">
       <label>Name:</label>
-      <BaseInput type="text" v-model="name" :error="nameError" />
+      <input type="text" name="name" v-model="name" />
 
       <label>Email:</label>
-      <BaseInput type="text" v-model="email" :error="emailError" />
+      <input type="text" email="email" v-model="email" />
 
       <label>Message:</label>
-      <BaseInput type="text" id="message" />
+      <input type="text" name="message" id="message" v-model="message" />
 
       <div class="submit">
-        <button type="submit">Send Feedback</button>
+        <button type="submit" :disabled="!email.length || !name.length || !message.length">Send Feedback</button>
       </div>
 
       <div class="response" id="response"></div>
@@ -21,80 +27,74 @@
 </template>
 
 <script>
-import BaseInput from "../components/BaseInput";
-import { useField, useForm } from 'vee-validate';
-
 export default {
   name: "Contact",
-  setup() {
-    function onSubmit() {
-    }
-
-    const validations = {
-      email: value => {
-        if (!value) return 'This field is required'
-
-        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        if (!regex.test(String(value).toLowerCase())) {
-          return 'Please enter a valid email address'
-        }
-
-        return true
-      },
-      name: value => {
-        const requiredMessage = 'This field is required'
-        if (value === undefined || value === null) return requiredMessage
-        if (!String(value).length) return requiredMessage
-
-        return true
-      }
-    }
-
-    useForm({
-      validationSchema: validations
-    })
-
-    const { value: email, errorMessage: emailError } = useField('email')
-    const { value: name, errorMessage: nameError } = useField('name')
-
+  data() {
     return {
-      onSubmit,
-      email,
-      emailError,
-      name,
-      nameError
+      errors: [],
+      name: "",
+      email: "",
+      message: "",
     }
   },
-  components: {
-    BaseInput,
+  mounted() {
+    this.name = this.$store.state.name
+    this.email = this.$store.state.email
   },
-  // computed: {
-  //   name: {
-  //     get() {
-  //       return this.$store.state.name
-  //     },
-  //     set(newName) {
-  //       this.$store.commit('updateName', newName);
-  //     }
-  //   },
-  //   email: {
-  //     get() {
-  //       return this.$store.state.email
-  //     },
-  //     set(newEmail) {
-  //       this.$store.commit('updateEmail', newEmail);
-  //     }
-  //   }
-  // },
   methods: {
     sendFeedback() {
-      document.getElementById("response").innerHTML="Sending...";
-      setTimeout(function(){
-      document.getElementById("response").innerHTML="Sent";
-      },1500);
-      setTimeout(function(){
-      document.getElementById("response").innerHTML="";
-      },3500);
+      this.errors = []
+      console.log(1)
+
+      if (this.name && this.email && this.message) {
+        this.updateInfo(this.name, this.email)
+      }
+      console.log(2)
+
+
+      if (!this.name) {
+        this.errors.push("Name required")
+      }
+      console.log(3)
+
+
+      if (!this.email) {
+        this.errors.push("Email required")
+      } else if (!this.validEmail(this.email)) {
+        this.errors.push("Valid email required")
+      }
+      console.log(4)
+
+
+      if (!this.message) {
+        this.errors.push("Message required")
+      }
+      console.log(5)
+
+
+      console.warn("errors", this.errors)
+
+      console.log(6)
+
+
+      if (this.errors.length === 0) {
+        document.getElementById("response").innerHTML="Sending...";
+        setTimeout(function(){
+        document.getElementById("response").innerHTML="Sent";
+        },1500);
+        setTimeout(function(){
+        document.getElementById("response").innerHTML="";
+        },3500);
+      }
+    },
+    validEmail: function (email) {
+      let re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return re.test(email)
+    },
+    updateInfo(name, email) {
+      this.$store.commit("updateName", name)
+      this.$store.commit("updateEmail", email)
     }
   }
 };
@@ -138,5 +138,14 @@ export default {
   }
   .submit {
     text-align: center;
+  }
+  button:disabled{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  }
+  .container {
+  text-align: center;
+  padding: 30px 0 0 0;
   }
 </style>
