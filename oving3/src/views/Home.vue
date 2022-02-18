@@ -1,12 +1,20 @@
 <template>
     <div>
-        <h1>Home</h1>
+        <h1>Hello {{ name }} </h1>
     </div>
 </template>
 
 <script>
     export default {
-        name: "Home"
+        name: "Home",
+        data() {
+            return {
+                name: ""
+            }
+        },
+        mounted() {
+            this.name = this.$store.state.fullName;
+        }
     }
 </script>
 
