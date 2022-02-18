@@ -44,38 +44,26 @@ export default {
   methods: {
     sendFeedback() {
       this.errors = []
-      console.log(1)
 
       if (this.name && this.email && this.message) {
         this.updateInfo(this.name, this.email)
       }
-      console.log(2)
-
 
       if (!this.name) {
         this.errors.push("Name required")
       }
-      console.log(3)
-
 
       if (!this.email) {
         this.errors.push("Email required")
       } else if (!this.validEmail(this.email)) {
         this.errors.push("Valid email required")
       }
-      console.log(4)
-
 
       if (!this.message) {
         this.errors.push("Message required")
       }
-      console.log(5)
-
 
       console.warn("errors", this.errors)
-
-      console.log(6)
-
 
       if (this.errors.length === 0) {
         document.getElementById("response").innerHTML="Sending...";
