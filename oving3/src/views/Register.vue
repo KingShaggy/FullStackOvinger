@@ -41,7 +41,10 @@
         },
         methods: {
             confirmRegistration() {
-
+                this.$store.commit("updateFullName", this.fullName);
+                this.$store.commit("updateUsername", this.username);
+                this.$store.commit("updatePassword", this.password);
+                this.$router.push({ name: 'Login' });
             }
         }
     }
