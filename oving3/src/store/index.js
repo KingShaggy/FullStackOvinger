@@ -1,6 +1,6 @@
-import { createStore } from 'vuex'
+import { createStore as vuexCreateStore } from 'vuex'
 
-const store = createStore({
+const storeConfiguration = {
   state: {
     username: '',
     password: '',
@@ -21,6 +21,29 @@ const store = createStore({
       state.token = payload;
     }
   }
-})
+}
 
-export default store;
+const defaultOverrides = {
+  state: () => {
+    return {}
+  }
+}
+
+function makeState(initialState, overrideState) {
+  return {
+    ...(typeof initialState === 'function' ? initialState() : initialState),
+    ...overrideState()
+  }
+}
+
+export function createStore(storeOverrides = defaultOverrides) {
+  return vuexCreateStore({
+    ...storeConfiguration,
+    ...storeOverrides,
+    ...{
+      state: makeState(storeConfiguration.state, storeOverrides.state)
+    }
+  })
+}
+
+export default createStore()
