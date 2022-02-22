@@ -1,6 +1,6 @@
 import Login from '@/views/Login.vue'
 import { mount } from '@vue/test-utils'
-import { createStore } from '@/store'
+import { createStore } from "vuex"
 import router from '@/router'
 
 //Redirect
@@ -10,36 +10,40 @@ import router from '@/router'
 //Vuex
 //Register link appears when invalid is true
 
-function mountLogin(config = {}) {
-    config.mountOptions = config.mountOptions || {}
-    config.plugins = config.plugins || {}
-    return mount(Login, {
-      global: {
-        plugins: [
-          createStore(config.plugins.store), 
-          router
-        ]
+const store = createStore({
+    state: {
+      username: '',
+      password: '',
+      fullName: '',
+      token: null,
+    },
+    mutations: {
+      updateUsername(state, payload) {
+        state.usern = payload;
       },
-      ...config.mountOptions
-    })
-}
-
-let wrapper
+      updatePassword(state, payload) {
+        state.password = payload;
+      },
+      updateFullName(state, payload) {
+        state.fullName = payload;
+      },
+      updateToken(state, payload) {
+        state.token = payload;
+      }
+    }
+})
 
 describe('Login', () => {
     test('User is redirected to home when login is valid', async () => {
-        wrapper = mountLogin({
-            plugins: [{
-                store: {
-                    state: () => ({
-                        token: 1,
-                        username: 'Ole',
-                        password: 'Ole123'
-                    })
-                },
-            }, router]
+        const wrapper = mount(Login, {
+            global: {
+                plugins: [store, router]
+            }
         })
         
+        store.commit("updateUsername", "Ole");
+        store.commit("updatePassword", "Ole123");
+
         router.push('/login')
         await router.isReady()
 
@@ -55,7 +59,7 @@ describe('Login', () => {
         expect(window.location.href).toEqual("http://localhost/")
     }),
     test('User is not redirected when login is invalid', () => {
-        wrapper = mount(Login)
+        const wrapper = mount(Login)
         expect(true).toBe(true)
     })
 })
