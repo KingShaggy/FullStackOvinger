@@ -9,7 +9,7 @@ const storeConfiguration = {
   },
   mutations: {
     updateUsername(state, payload) {
-      state.usern = payload;
+      state.username = payload;
     },
     updatePassword(state, payload) {
       state.password = payload;

@@ -1,12 +1,12 @@
 <template>
     <h1>Please log in</h1>
-    <form @submit.prevent="confirmLogin">
+    <form data-test="form" @submit.prevent="confirmLogin">
         <div class="input">
             <label>Username:</label>
-            <input type="text" name="username" v-model="username" />
+            <input data-test="username" type="text" name="username" v-model="username" />
 
             <label>Password:</label>
-            <input type="password" name="password" v-model="password" />
+            <input data-test="password" type="password" name="password" v-model="password" />
 
 
             <div class="submit">
