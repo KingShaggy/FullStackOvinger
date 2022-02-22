@@ -27,11 +27,24 @@ describe('Home', () => {
                 store: {
                     state: () => ({
                         token: 1,
-                        fullName: 'Ole'
                     })
                 },
             }, router]
         })
-        expect(wrapper.html()).toContain('Ole')
+        expect(wrapper.html()).toContain('Hello')
+    }),
+    test('Login is displayed when user is not authenticated', async () => {
+        router.push('/')
+        await router.isReady()
+        const wrapper = mountHome({
+            plugins: [{
+                store: {
+                    state: () => ({
+                        token: null,
+                    })
+                },
+            }, router]
+        })
+        expect(window.location.href).toContain('login')
     })
 })
