@@ -31,7 +31,7 @@
         },
         methods: {
             confirmLogin() {
-                if (this.username !== this.$store.state.username && this.password !== this.$store.state.password) {
+                if (this.username !== this.$store.state.username || this.password !== this.$store.state.password) {
                     this.invalid = true;
                 } else {
                     this.$store.commit("updateToken", 123);

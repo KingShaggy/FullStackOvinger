@@ -26,12 +26,9 @@ describe('Home', () => {
                 },
             }, router]
         })
-        await router.isReady()
         expect(wrapper.html()).toContain('Hello')
     }),
     test('Login is displayed when user is not authenticated', async () => {
-        router.push('/')
-        await router.isReady()
         const wrapper = mountHome({
             plugins: [{
                 store: {
@@ -41,6 +38,7 @@ describe('Home', () => {
                 },
             }, router]
         })
+        await router.isReady()
         expect(window.location.href).toEqual("http://localhost/login")
     })
 })
