@@ -32,7 +32,6 @@ describe('Login', () => {
             plugins: [{
                 store: {
                     state: () => ({
-                        token: 1,
                         username: 'Ole',
                         password: 'Ole123'
                     })
@@ -49,8 +48,25 @@ describe('Login', () => {
 
         expect(window.location.href).toEqual("http://localhost/")
     }),
-    test('User is not redirected when login is invalid', () => {
-        wrapper = mount(Login)
-        expect(true).toBe(true)
+    test('User is not redirected when login is invalid', async () => {
+        wrapper = mountLogin({
+            plugins: [{
+                store: {
+                    state: () => ({
+                        username: 'Ole',
+                        password: 'Ole123'
+                    })
+                },
+            }, router]
+        })
+
+        const usernameInput = wrapper.find('[data-test="username"]')
+        const passwordInput = wrapper.find('[data-test="password"]')
+        
+        await usernameInput.setValue("Ole")
+        await passwordInput.setValue("Ole1234")
+        await wrapper.find('[data-test="form"]').trigger('submit')
+
+        expect(window.location.href).toEqual("http://localhost/login")
     })
 })
