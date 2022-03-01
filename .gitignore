@@ -1,6 +1,21 @@
 .DS_Store
 node_modules
 /dist
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
 
 
 # local env files
@@ -21,3 +36,9 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
