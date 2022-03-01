@@ -1,4 +1,4 @@
-package com.mikkelof.oving4;
+package com.mikkelof.oving4.web;
 
 
 import org.springframework.web.bind.annotation.RestController;
