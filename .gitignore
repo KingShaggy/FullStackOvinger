@@ -38,7 +38,7 @@ pnpm-debug.log*
 *.sw?
 
 # IntelliJ IDEA
-.idea
+.idea/*
 *.iws
 *.iml
 *.ipr
