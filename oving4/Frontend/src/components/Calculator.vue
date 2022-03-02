@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     data() {
         return {
@@ -57,7 +59,7 @@ export default {
             }
         },
         divide() {
-            this.operator = '/';
+            this.operator = 'div';
             this.previous = this.current;
             this.clear();
         },
@@ -77,10 +79,13 @@ export default {
             this.clear();
         },
         equals() {
-            this.result = eval(this.previous + this.operator + this.current);
-            this.newHistory = this.previous + " " + this.operator + " " + this.current + " = " + this.result;
-            this.updateHistory(this.newHistory);
-            this.current = this.result;
+            axios.get("http://localhost:8081/calculate/" + this.previous + "/" + this.operator + "/" + this.current)
+                .then(response => {
+                    this.result = response.data
+                    this.newHistory = this.previous + " " + this.operator + " " + this.current + " = " + this.result;
+                    this.updateHistory(this.newHistory);
+                    this.current = this.result;
+                })
         },
         updateHistory(newHistory) {
             this.$store.commit('updateHistory', newHistory);
